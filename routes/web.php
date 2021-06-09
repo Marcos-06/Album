@@ -14,8 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Rota Pagina Inicial
 Route::get('/', [PhotoController::class, 'index'] );
 
-Route::get('/photos/new', function() {
-  return view('pages/photo_form');
-});
+//Rota que Exibe o Formulario de Cadrasto
+Route::get('/photos/new', [PhotoController::class, 'create']);
+
+//Rota que inseri no banco de dados uma nova foto
+Route::post('/photos', [PhotoController::class, 'store']);
