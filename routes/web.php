@@ -20,5 +20,11 @@ Route::get('/', [PhotoController::class, 'index'] );
 //Rota que Exibe o Formulario de Cadrasto
 Route::get('/photos/new', [PhotoController::class, 'create']);
 
-//Rota que inseri no banco de dados uma nova foto
+//Rota que exibe o formulario de edição
+Route::get('/photos/edit/{id}', [PhotoController::class, 'edit']);
+
+//Rota que insere no banco de dados uma nova foto
 Route::post('/photos', [PhotoController::class, 'store']);
+
+//Rota que altera ma foto no banco de dados
+Route::put('/photos/{id}', [PhotoController::class, 'update']);
