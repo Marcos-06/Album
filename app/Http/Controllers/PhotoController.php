@@ -111,6 +111,10 @@ class PhotoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //Retorna a foto do banco de dados
+        Photo::findOrFail($id)->delete();
+
+        //Rediricionar para a pagina de fotos
+        return redirect('/photos');
     }
 }

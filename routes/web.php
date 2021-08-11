@@ -30,3 +30,6 @@ Route::post('/photos', [PhotoController::class, 'store']);
 
 //Rota que altera ma foto no banco de dados
 Route::put('/photos/{id}', [PhotoController::class, 'update']);
+
+//Foto que exclui uma foto no banco de dados
+Route::delete('/photos/{id}', [PhotoController::class, 'destroy']);
