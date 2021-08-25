@@ -40,22 +40,32 @@ class PhotoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //Criacao os atributos do objeto
-        $photo = new Photo();
-
-        //Alterando os atributos do Objeto
-        $photo->title = $request->title;
-        $photo->date = $request->date;
-        $photo->description = $request->description;
-        $photo->photos_url = "teste";
-
-        //Inserindo no banco de dados
-        $photo->save();
-
-        //Redirecionar Para pagina Inicial
-        return redirect('/');
+  {
+    //Criação de um um objeto do tipo Photo
+    $photo = new Photo();
+    //Alterando os atributos do objeto
+    $photo->title = $request->title;
+    $photo->date = $request->date;
+    $photo->description = $request->description;
+    //upload
+    if($request->hasFile('photo') && $request->file('photo')){
+      //Define um nome aleatório para a foto, com base na data e hora atual
+      $nomeFoto = uniqid(date('HisYmd'));
+      //Recupera a extensão do arquivo
+      $extensao = $request->photo->extension();
+      //Nome do arquivo com extensão
+      $nomeArquivo = "{$nomeFoto}.{$extensao}";
+      //upload
+      $upload = $request->photo->move(public_path('/storage/photos'),$nomeArquivo);
+      $photo->photos_url = $nomeArquivo;
     }
+    if($upload){
+      //Inserindo no banco de dados
+      $photo->save();
+    }
+    //Redirecionar para a página inicial
+    return redirect('/');
+  }
 
     /**
      * Display the specified resource.

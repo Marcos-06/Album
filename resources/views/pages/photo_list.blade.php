@@ -31,7 +31,7 @@
               @foreach($photos as $photo)
               <tr class="align-middle">
                 <td>{{$photo->id}}</td>
-                <td><img class="img-thumbnail" width="240" src="https://www.osmais.com/wallpapers/201209/dia-de-chuva-wallpaper.jpg" alt=""></td>
+                <td><img class="img-thumbnail" width="230" style="object-fit: cover; height:130px" src="{{url("/storage/photos/$photo->photos_url")}}" alt=""></td>
                 <td>{{$photo->title}}</td>
                 <td>{{$photo->date}}</td>
                 <td>
