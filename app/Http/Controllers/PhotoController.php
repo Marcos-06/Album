@@ -62,7 +62,7 @@ class PhotoController extends Controller
       $photo->photos_url = end($directoryArray);
     }
 
-    if(true){
+    if (true){
       //Inserindo no banco de dados
       $photo->save();
     }
@@ -108,15 +108,37 @@ class PhotoController extends Controller
         $photo->title = $request->title;
         $photo->date = $request->date;
         $photo->description = $request->description;
-        $photo->photo_url = "teste";
+        
+        if($request->hasFile('photo') && $request->file('photo')->isValid()){
+          //excluir foto antiga
+          $this->deletePhoto($photo->photos_url);
 
-        //Alterando no banco de dados
-        $photo->update();
+          //realizar o upload da nova foto
+          //Salvando o caminho completo em uma variavel
+          $upload = $this->uploadPhoto($request->photo);
 
-        //Redirecionar Para pagina Inicial
-        return redirect('/photos');
+          //Dividindo a string em um array
+          $directoryArray = explode(DIRECTORY_SEPARATOR,$upload);
+
+          //Adicionando o nome do arquivo ao atributo photo_url
+          $photo->photos_url = end($directoryArray);
+        
+
+          //Se tudo deu certo, realiza o update
+          if ($directoryArray){
+            $photo->update();//Alterando no banco de dados
+          }
+
+          //Redirecionar Para pagina Inicial
+          return redirect('/photos');
+        }
+
+      $photo->update();//Alterando no banco de dados
+
+      //Redirecionar Para pagina Inicial
+      return redirect('/photos');
     }
-
+  
     /**
      * Remove the specified resource from storage.
      *
@@ -140,13 +162,13 @@ class PhotoController extends Controller
 
     public function uploadPhoto($photo){
       //Define um nome aleatório para a foto, com base na data e hora atual
-      $nomeFoto = uniqid(date('HisYmd'));
+      $nomeFoto = sha1(uniqid(date('HisYmd')));
       //Recupera a extensão do arquivo
       $extensao = $photo->extension();
       //Nome do arquivo com extensão
       $nomeArquivo = "{$nomeFoto}.{$extensao}";
       //upload
-      $upload = $photo->move(public_path(("storage".DIRECTORY_SEPARATOR."photos"),'/storage/photos'),$fileName);
+      $upload = $photo->move(public_path(DIRECTORY_SEPARATOR.'/storage/photos'),$nomeArquivo);
       //retorna o nome do arquivo
       return $upload;
       
@@ -160,7 +182,7 @@ class PhotoController extends Controller
         unlink(public_path("storage".DIRECTORY_SEPARATOR."photos".DIRECTORY_SEPARATOR.$fileName));
 
         //Excluir o registro do bd
-        $photo->delete();
+        //$photo->delete();
       }
     }
 
